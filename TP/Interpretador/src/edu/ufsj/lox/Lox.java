@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import hava.nio.file.Paths;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
@@ -18,7 +18,7 @@ public class Lox {
         } else if (args.length == 1){
             runFile(args[0]);
         } else {
-            runPrompt():
+            runPrompt();
         }
     }
 
@@ -59,4 +59,3 @@ public class Lox {
     }
 
 }
-
