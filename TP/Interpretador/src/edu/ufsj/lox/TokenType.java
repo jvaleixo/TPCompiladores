@@ -1,4 +1,4 @@
-package edu.ufsj.lox:
+package edu.ufsj.lox;
 
 enum TokenType{
 

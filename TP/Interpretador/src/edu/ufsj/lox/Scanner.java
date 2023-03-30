@@ -27,6 +27,6 @@ class Scanner{
           scanToken();
         }
         tokens.add(new Token(EOF, "", null, line));
-        return tonkes;
+        return tokens;
     }
 }
