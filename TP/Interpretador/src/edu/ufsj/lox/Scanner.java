@@ -8,6 +8,7 @@ import java.util.Map;
 import static edu.ufsj.lox.TokenType.*;
 
 class Scanner{
+    private static final Map<String, TokenType> keywords;
     private int start = 0;
     private int current = 0;
     private int line = 1;
@@ -73,13 +74,52 @@ class Scanner{
                     addToken(SLASH);
                 }
                 break;
+            case '"': string(); break;
             case ' ':
             case '\t':
             case '\r':
                     break;
             case '\n': line++; break;
-            default: Lox.error(line, "Unexpected character."); break;
+            default:
+              if(isDigit()){
+                  number();
+            } else if (isAlpha(c)){
+              identifier();
+            } else { Lox.error(line, "Unexpected character.");
+            }
+             break;
         }
+      }
+
+      private void string(){
+        while(peek() != '"' &&!isAtEnd){
+          if(peek() == '\n') line++;
+            advance();
+        }
+        // abre o " sem o  respectivo  fecha "
+        if(isAtEnd()){
+          Lox.error(line, "Unterminated string");
+          return;
+        }
+        // o fecha "
+        advance();
+        // remove os "s
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING,value);
+      }
+
+      private void number(){
+        while(isDigit(peek())) advance();
+        //procura a parte fracionaria
+        if(peek() == '.' && isDigit(peekNext())){
+          // consome o "."
+          while(isDigit(peek())) advance();
+        }
+        addToken(NUMBER, Double.parseDouble(source.substring(start,current)));
+      }
+
+      private boolean isDigit(char c){
+        return c >= '0' && c <= '9';
       }
 
       private boolean match(char expected){
@@ -93,5 +133,45 @@ class Scanner{
       private char peek(){
           if(isAtEnd()) return '\0';
           return source.charAt(current);
+      }
+
+      private char peekNext(){
+        if(current + 1 >= source.length()) return '0';
+        return source.charAt(current+1);
+      }
+
+      private boolean isAlpha(char c){
+        return (c >= 'a' && 'c' <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_');
+      }
+
+      private boolean isAlphaNumberic(char c){
+        return isAlpha(c) || isDigit(c);
+      }
+
+      private void identifier(){
+        while(isAlphaNumberic(peek())) advance();
+        String text = source.substring(start, current);
+        TokenType type = keywords.get(text);
+        if(type == null) type == IDENTIFIER;
+        addToken(type);
+      }
+
+      static{
+        keywords = new HashMap<String,TokenType>();
+        keywords.put("and", AND);
+        keywords.put("class", CLASS);
+        keywords.put("false", FALSE);
+        keywords.put("for", FOR);
+        keywords.put("fun", FUN);
+        keywords.put("if", IF);
+        keywords.put("nil", NIL);
+        keywords.put("or", OR);
+        keywords.put("print", PRINT);
+        keywords.put("return", RETURN);
+        keywords.put("super", SUPER);
+        keywords.put("this", THIS);
+        keywords.put("true", TRUE);
+        keywords.put("var", VAR);
+        keywords.put("while", WHILE);
       }
 }
