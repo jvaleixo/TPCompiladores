@@ -66,13 +66,26 @@ class Scanner{
             case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
             case '>': addToken(match('=') ? GREATER_EQUAL: GREATER); break;
             case '/':
-                if(match('/')){
+                // /* c */ *
+                //  a|
+                if(match('*')){
+                    //comentarios de varias linhas
+                    while(!isAtEnd()){
+                        char a = advance();
+                        if(a == '\n') line++;
+                        if(a == '*' && peek() == '/'){
+                            advance();
+                            break;
+                        }
+                    };
+
+                }else if(match('/')){
                     //comentarios de uma linha
-                    while(peek() != '\n' && !isAtEnd())
-                       advance();
-                } else{
-                    addToken(SLASH);
+                    while(peek() != '\n' && !isAtEnd()){
+                        advance();
+                    }
                 }
+                else addToken(SLASH);
                 break;
             case '"': string(); break;
             case ' ':
@@ -81,7 +94,7 @@ class Scanner{
                     break;
             case '\n': line++; break;
             default:
-              if(isDigit()){
+              if(isDigit(c)){
                   number();
             } else if (isAlpha(c)){
               identifier();
@@ -92,7 +105,7 @@ class Scanner{
       }
 
       private void string(){
-        while(peek() != '"' &&!isAtEnd){
+        while(peek() != '"' &&!isAtEnd()){
           if(peek() == '\n') line++;
             advance();
         }
@@ -119,7 +132,7 @@ class Scanner{
       }
 
       private boolean isDigit(char c){
-        return c >= '0' && c <= '9';
+        return (c >= '0' && c <= '9');
       }
 
       private boolean match(char expected){
@@ -152,7 +165,7 @@ class Scanner{
         while(isAlphaNumberic(peek())) advance();
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
-        if(type == null) type == IDENTIFIER;
+        if(type == null) type = IDENTIFIER;
         addToken(type);
       }
 
