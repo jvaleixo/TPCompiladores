@@ -40,13 +40,13 @@ public class GenerateAst{
     }
     //definicao do accept()
     writer.println();
-    writer;println("   abstract <R> R accept" + "(Visitor <R> visitor);");
+    writer.println("   abstract <R> R accept" + "(Visitor <R> visitor);");
     writer.println("}");
     writer.close();
   }
 
   private static void defineType(PrintWriter writer, String baseName,String className, String fieldList){
-    writer.println("   static class " + className + " extends "+ baseName);
+    writer.println("   static class " + className + " extends "+ baseName +" {");
     //construtor
     writer.println("      " + className + "(" + fieldList + ") {");
     //inicializa campos
@@ -59,7 +59,7 @@ public class GenerateAst{
 
     writer.println();
     writer.println("      @Override");
-    writer.println("      <R> R accept(Visitor <R> " + "visitor); {");
+    writer.println("      <R> R accept(Visitor <R> " + "visitor){");
     writer.println("         return visitor.visit" + className + baseName + "(this);");
     writer.println("      }");
 
@@ -76,7 +76,7 @@ public class GenerateAst{
 
     for(String type: types){
       String typeName = type.split(":")[0].trim();
-      writer.println("      R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ")");
+      writer.println("      R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
     }
 
     writer.println("   }");
