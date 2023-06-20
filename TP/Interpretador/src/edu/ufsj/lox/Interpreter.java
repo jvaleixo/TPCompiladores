@@ -84,6 +84,12 @@ public class Interpreter implements Expr.Visitor<Object> {
         }else if(left.equals("false")){
             Object right = evaluate(expr.right);
             return right;
+        }else if(Double.parseDouble(left.toString()) > 0){
+            Object middle = evaluate(expr.middle);
+            return middle;
+        } else if(Double.parseDouble(left.toString()) <= 0){
+            Object right = evaluate(expr.right);
+            return right;
         }else{
             Token t = new Token(null, "?", left, 0);
             throw new RuntimeError(t, "must be a binary expression.");
