@@ -78,10 +78,10 @@ public class Interpreter implements Expr.Visitor<Object> {
     public Object visitTernaryExpr(Expr.Ternary expr){
         Object left = evaluate(expr.left).toString();
         
-        if(left.equals("true") || Double.parseDouble(left.toString()) > 0){
+        if(left.equals("true")){
             Object middle = evaluate(expr.middle);
             return middle;
-        }else if(left.equals("false") || Double.parseDouble(left.toString()) <= 0){
+        }else if(left.equals("false")){
             Object right = evaluate(expr.right);
             return right;
         }else{
