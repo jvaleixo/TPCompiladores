@@ -23,9 +23,23 @@ class Parser {
     }
   }
 
-  private Expr expression(){
-    return equality();
-  }
+  //AQUI
+	private Expr expression() {
+		return ternary();
+	}
+  //AQUI
+  private Expr ternary() {
+		Expr expr = equality();
+		
+		while(match(INTERROGATION)) {
+			Expr middle = equality();
+			consume(COLON, "Expect ':' after expression");
+			Expr right = equality();
+			expr = new Expr.Ternary(expr, middle, right);
+		}
+		
+		return expr;
+	}
 
   private Expr equality(){
     Expr expr = comparison();
@@ -95,7 +109,7 @@ class Parser {
 
     return expr;
   }
-
+  
   private Expr factor(){
     Expr expr = unary();
 

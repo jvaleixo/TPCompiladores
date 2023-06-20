@@ -61,6 +61,8 @@ class Scanner{
             case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+            case '?': addToken(INTERROGATION); break;//AQUI
+		        case ':': addToken(COLON); break;//AQUI
             case '!': addToken(match('=') ? BANG_EQUAL: BANG); break;
             case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;
             case '<': addToken(match('=') ? LESS_EQUAL: LESS); break;
@@ -107,7 +109,7 @@ class Scanner{
       private void string(){
         while(peek() != '"' &&!isAtEnd()){
           if(peek() == '\n') line++;
-            advance();
+          advance();
         }
         // abre o " sem o  respectivo  fecha "
         if(isAtEnd()){
@@ -154,7 +156,7 @@ class Scanner{
       }
 
       private boolean isAlpha(char c){
-        return (c >= 'a' && 'c' <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_');
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_');
       }
 
       private boolean isAlphaNumberic(char c){
@@ -173,6 +175,7 @@ class Scanner{
         keywords = new HashMap<String,TokenType>();
         keywords.put("and", AND);
         keywords.put("class", CLASS);
+        keywords.put("else", ELSE);//AQUI
         keywords.put("false", FALSE);
         keywords.put("for", FOR);
         keywords.put("fun", FUN);
